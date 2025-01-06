@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="Theme Autochanger" Language="1033" Version="0.1.0.0" Manufacturer="RJSoft" UpgradeCode="PUT-UNIQUE-GUID-HERE">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="Windows Theme Autochanger" />
+      </Directory>
+    </Directory>
+
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="MainExecutable" Guid="PUT-UNIQUE-GUID-HERE">
+        <File Source="windows-theme-autochanger.exe" KeyPath="yes" />
+
+        <!-- Register the executable as a Windows service -->
+        <ServiceInstall 
+          Id="WindowsThemeAutochangerService" 
+          Name="WindowsThemeAutochanger" 
+          DisplayName="Theme Autochanger Service" 
+          Description="Automatically changes Windows themes." 
+          Start="auto" 
+          Type="ownProcess" 
+          Account="LocalSystem" />
+
+        <!-- Control the service (start and stop during installation/uninstallation) -->
+        <ServiceControl 
+          Id="StartService" 
+          Name="WindowsThemeAutochanger" 
+          Start="install" 
+          Stop="both" 
+          Remove="uninstall" 
+          Wait="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <Feature Id="ProductFeature" Title="Windows Theme Autochanger" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+  </Product>
+</Wix>
